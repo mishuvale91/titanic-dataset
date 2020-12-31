@@ -44,7 +44,7 @@ titanic_data$PassengerId[titanic_data$Embarked == ""]
 
 # 62 830   // Falta el pasajero 62 y 830 Embarcado.
 
-# Ahora se sabe a qué clase pertenecen y cuánto pagaron tarifa
+# Ahora se sabe a qué clase pertenecen y cuánto pagaron por tarifa
 
 titanic_data$Pclass[titanic_data$PassengerId == 62]
 
