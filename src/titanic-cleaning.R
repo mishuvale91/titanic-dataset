@@ -1,0 +1,141 @@
+# PRÁCTICA 2 - TIPOLOGÍA Y CICLO DE VIDA DE LOS DATOS 
+
+# INTEGRANTES:
+# JUAN MANUEL PENALTA
+# MICHAELLE VALENZUELA
+
+# =====================CARGA DE LIBRERÍAS ==============================
+library(lubridate)
+library(dplyr)
+library(reshape2)
+
+# ==================== LECTURA DEL CONJUNTO DE DATOS ========================
+
+titanic_data <- read.csv("UOC/M2.851 - Tipologia y ciclo de vida de los datos aula 3/Practica 2/titanic/train.csv", stringsAsFactors = FALSE)
+filas=dim(titanic_data)[1]
+head(titanic_data)
+
+# Tipo de dato asignado a cada campo
+sapply(titanic_data, function(x) class(x))
+
+# ==================== SELECCIÓN DE DATOS ===================================
+
+titanic_data <- titanic_data[, -(4:4)]
+
+# Estructura del conjunto de datos
+str(titanic_data)
+
+# ==================== LIMPIEZA DE DATOS ====================================
+
+# Estadísticas de valores vacíos
+colSums(is.na(titanic_data))
+
+colSums(titanic_data=="")
+
+# Se toma la media para valores vacíos de la variable "Age"
+titanic_data$Age[is.na(titanic_data$Age)] <- mean(titanic_data$Age,na.rm=T)
+
+# Se convierte el formato de la variable age de numérica a entero
+titanic_data$Age <- as.integer(as.numeric(titanic_data$Age))
+
+
+# Se examina qué pasajero ha desaparecido 
+titanic_data$PassengerId[titanic_data$Embarked == ""]
+
+# 62 830   // Falta el pasajero 62 y 830 Embarcado.
+
+# Ahora se sabe a qué clase pertenecen y cuánto pagaron tarifa
+
+titanic_data$Pclass[titanic_data$PassengerId == 62]
+
+# 1
+
+titanic_data$Fare[titanic_data$PassengerId == 62]
+
+# 80
+
+
+titanic_data$Pclass[titanic_data$PassengerId == 830]
+
+# 1
+
+titanic_data$Fare[titanic_data$PassengerId == 830]
+
+# 80
+
+# Se puede observar que ambos pasajeros están en clase 1 y tarifa pagada 80. 
+
+# La tarifa mediana para el pasajero de primera clase que sale de C (Charbourg) Embarcado coincide muy bien con los $ 80 pagados 
+# por los pasajeros cuyo Embarcado falta. Entonces se procede a reemplazar con seguridad el NA con C.
+
+titanic_data$Embarked[c(62, 830)] <- "C"
+
+# ¿Qué variables pueden pasar por un proceso de discretización?
+apply(titanic_data,2, function(x) length(unique(x)))
+
+# Se discretiza las variables con pocas clases
+cols<-c("Survived","Pclass","Sex","Embarked")
+for (i in cols){
+  titanic_data[,i] <- as.factor(titanic_data[,i])
+}
+
+# Después de los cambios, se analiza la nueva estructura del conjunto de datos
+str(titanic_data)
+
+# =============== IDENTIFICACIÓN Y TRATAMIENTO DE VALORES EXTREMOS =============================
+
+# Se utiliza boxplot.stats para identitifcar si en el conjunto de datos existe valores extremos o outliers
+
+boxplot.stats(titanic_data$Survived)$out
+
+# Levels: 0 1
+
+boxplot.stats(titanic_data$Pclass)$out
+
+# Levels: 1 2 3
+
+boxplot.stats(titanic_data$Sex)$out
+
+# Levels: female male
+
+boxplot.stats(titanic_data$Age)$out
+
+# 2 58 55  2 66 65  0 59 71 70  2 55  1 61  1 56  1 58  2 59 62 58 63 65  2  0 61  2 60  1  1 64 65 56  0  2 63 58
+# 55 71  2 64 62 62 60 61 57 80  2  0 56 58 70 60 60 70  0 57  1  0  2  1 62  0 74 56
+
+# Con estos valores se puede observar que hay muchos pasajeros cuya edad excede los valores mas comunes,es decir,
+# los valores superiores a 64, por lo que se puede deducir que hay personas mayores a bordo del barco es raro. 
+
+boxplot.stats(titanic_data$SibSp)$out
+
+# 3 4 3 3 4 5 3 4 5 3 3 4 8 4 4 3 8 4 8 3 4 4 4 4 8 3 3 5 3 5 3 4 4 3 3 5 4 3 4 8 4 3 4 8 4 8
+
+boxplot.stats(titanic_data$Parch)$out
+
+# 1 2 1 5 1 1 5 2 2 1 1 2 2 2 1 2 2 2 3 2 2 1 1 1 1 2 1 1 2 2 1 2 2 2 1 2 1 1 2 1 4 1 1 1 1 2 2 1 2 1 1 1 2 1 1 2 2
+# 2 1 1 2 2 1 2 1 1 1 1 1 1 1 2 1 2 2 1 1 2 1 1 2 1 1 1 1 2 1 1 1 4 1 1 2 2 2 2 2 1 1 1 2 2 1 1 2 2 3 4 1 2 1 1 2 1
+# 2 1 2 1 1 2 2 1 1 1 1 2 2 2 2 2 2 1 1 2 1 4 1 1 2 1 2 1 1 2 5 2 1 1 1 2 1 5 2 1 1 1 2 1 6 1 2 1 2 1 1 1 1 1 1 1 3
+# 2 1 1 1 1 2 1 2 3 1 2 1 2 2 1 1 2 1 2 1 2 1 1 1 2 1 1 2 1 2 1 1 1 1 3 2 1 1 1 1 5 2
+
+boxplot.stats(titanic_data$Fare)$out
+
+# 71.2833 263.0000 146.5208  82.1708  76.7292  80.0000  83.4750  73.5000 263.0000  77.2875 247.5208  73.5000
+# 77.2875  79.2000  66.6000  69.5500  69.5500 146.5208  69.5500 113.2750  76.2917  90.0000  83.4750  90.0000
+# 79.2000  86.5000 512.3292  79.6500 153.4625 135.6333  77.9583  78.8500  91.0792 151.5500 247.5208 151.5500
+# 110.8833 108.9000  83.1583 262.3750 164.8667 134.5000  69.5500 135.6333 153.4625 133.6500  66.6000 134.5000
+# 263.0000  75.2500  69.3000 135.6333  82.1708 211.5000 227.5250  73.5000 120.0000 113.2750  90.0000 120.0000
+# 263.0000  81.8583  89.1042  91.0792  90.0000  78.2667 151.5500  86.5000 108.9000  93.5000 221.7792 106.4250
+# 71.0000 106.4250 110.8833 227.5250  79.6500 110.8833  79.6500  79.2000  78.2667 153.4625  77.9583  69.3000
+# 76.7292  73.5000 113.2750 133.6500  73.5000 512.3292  76.7292 211.3375 110.8833 227.5250 151.5500 227.5250
+# 211.3375 512.3292  78.8500 262.3750  71.0000  86.5000 120.0000  77.9583 211.3375  79.2000  69.5500 120.0000
+# 93.5000  80.0000  83.1583  69.5500  89.1042 164.8667  69.5500  83.1583
+
+boxplot.stats(titanic_data$Embarked)$out
+
+# Levels:  C Q S
+
+# =============== EXPORTACIÓN DE LOS DATOS PROCESADOS =============================
+# Exportación de los datos limpios en .csv
+
+write.csv(titanic_data, "titanic-cleaning.csv")
+
