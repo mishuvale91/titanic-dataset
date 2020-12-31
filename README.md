@@ -27,7 +27,7 @@ Se analiza datos de supervivencia de los pasajeros del transatlántico Titanic, 
 ## Descrición de los archivos:
 
 ### data/titanic.csv
->Este archivo contiene los **datos originales** que se utilizaron para la práctica. Los datos fueron descargados de la página [https://www.kaggle.com/c/titanic/data](https://www.kaggle.com/c/titanic/data). El dataset dispone de 2207 entradas, con 10 campos que se describen el documento "doc/M285.1 Práctica 2".
+>Este archivo contiene los **datos originales** que se utilizaron para la práctica. Los datos fueron descargados de la página [https://www.kaggle.com/c/titanic/data](https://www.kaggle.com/c/titanic/data). El dataset dispone de 891 entradas, con 11 campos que se describen el documento "doc/M285.1 Práctica 2".
 
 ### data/titanic_
 >Este es el fichero de **datos utilizado para el análisis**. Se obtuvo tras la realización de las labores de selección y limpieza de los datos del fichero original.
