@@ -20,7 +20,9 @@ sapply(titanic_data, function(x) class(x))
 
 # ==================== SELECCIÓN DE DATOS ===================================
 
-titanic_data <- titanic_data[, -(4:4)]
+titanic_data <- titanic_data %>% 
+                select(-Name,
+                       -Cabin)  
 
 # Estructura del conjunto de datos
 str(titanic_data)
