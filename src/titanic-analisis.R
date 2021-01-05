@@ -131,8 +131,6 @@ fligner.test(Fare ~ Survived, data = titanic_analisis)
 
 # Análisis de Correlación
 
-# Entre Fare y Age
-
 calculo_numericas <- titanic_analisis %>% 
                      select(PassengerId,
                             Age,
