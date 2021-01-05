@@ -21,6 +21,7 @@ sapply(titanic_data, function(x) class(x))
 
 # ==================== SELECCIÓN DE DATOS ===================================
 
+# Se crea una nueva variable
 titanic_data$FamilySize <- titanic_data$SibSp + titanic_data$Parch +1;
 titanic_data1<-titanic_data[1:filas,]
 
@@ -114,16 +115,11 @@ boxplot.stats(titanic_data1$Age)$out
 # Con estos valores se puede observar que hay muchos pasajeros cuya edad excede los valores mas comunes,es decir,
 # los valores superiores a 64, por lo que se puede deducir que hay personas mayores a bordo del barco es raro. 
 
-boxplot.stats(titanic_data1$SibSp)$out
+boxplot.stats(titanic_data1$FamilySize)$out
 
-# 3 4 3 3 4 5 3 4 5 3 3 4 8 4 4 3 8 4 8 3 4 4 4 4 8 3 3 5 3 5 3 4 4 3 3 5 4 3 4 8 4 3 4 8 4 8
-
-boxplot.stats(titanic_data1$Parch)$out
-
-# 1 2 1 5 1 1 5 2 2 1 1 2 2 2 1 2 2 2 3 2 2 1 1 1 1 2 1 1 2 2 1 2 2 2 1 2 1 1 2 1 4 1 1 1 1 2 2 1 2 1 1 1 2 1 1 2 2
-# 2 1 1 2 2 1 2 1 1 1 1 1 1 1 2 1 2 2 1 1 2 1 1 2 1 1 1 1 2 1 1 1 4 1 1 2 2 2 2 2 1 1 1 2 2 1 1 2 2 3 4 1 2 1 1 2 1
-# 2 1 2 1 1 2 2 1 1 1 1 2 2 2 2 2 2 1 1 2 1 4 1 1 2 1 2 1 1 2 5 2 1 1 1 2 1 5 2 1 1 1 2 1 6 1 2 1 2 1 1 1 1 1 1 1 3
-# 2 1 1 1 1 2 1 2 3 1 2 1 2 2 1 1 2 1 2 1 2 1 1 1 2 1 1 2 1 2 1 1 1 1 3 2 1 1 1 1 5 2
+# 5  7  6  5  7  6  4  6  4  8  6  7  8  4  5  6  4  7  5 11  6  6  6  5 11  7  4 11  5  7  7  6  6  4  4  5 11  6
+# 6  5  8  4  5  4  5  6  6  4  4  4  4  8  5  4  4  7  7  5  4  4  7  4  4  6  6  6  4  8  8  4  6  4  5  5  4  4
+# 5  4  6  4 11  4  7  6  6 11  7  4 11  6  4
 
 boxplot.stats(titanic_data1$Fare)$out
 
